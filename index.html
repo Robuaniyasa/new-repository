@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helix.geolocation</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#07111f;
+    color:#f5f7fa;
+    min-height:100vh;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:#07111f;
+    border-bottom:1px solid #20364e;
+}
+
+.container{
+    width:min(1100px,94%);
+    margin:auto;
+}
+
+.nav{
+    min-height:70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#2994ff;
+}
+
+.nav-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+
+button{
+    cursor:pointer;
+    font:inherit;
+}
+
+.nav-buttons button{
+    background:transparent;
+    color:white;
+    border:1px solid #29425c;
+    padding:8px 12px;
+    border-radius:8px;
+}
+
+.nav-buttons button:hover{
+    background:#142b44;
+}
+
+section{
+    display:none;
+    padding:35px 0 60px;
+}
+
+section.active{
+    display:block;
+}
+
+.hero{
+    padding:60px 0 40px;
+}
+
+.hero h1{
+    font-size:clamp(38px,8vw,72px);
+    line-height:1;
+    margin-bottom:20px;
+}
+
+.hero h1 span{
+    color:#2994ff;
+}
+
+.hero p{
+    max-width:760px;
+    color:#aebdcb;
+    font-size:17px;
+    line-height:1.7;
+}
+
+.actions{
+    margin-top:25px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.primary{
+    background:#238cff;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:9px;
+    font-weight:bold;
+}
+
+.primary:hover{
+    background:#0875df;
+}
+
+.secondary{
+    background:#14283d;
+    color:white;
+    border:1px solid #29445f;
+    padding:12px 18px;
+    border-radius:9px;
+    font-weight:bold;
+}
+
+.card-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.card{
+    background:#0d1d2e;
+    border:1px solid #213950;
+    border-radius:15px;
+    padding:22px;
+}
+
+.card h3{
+    margin-bottom:9px;
+}
+
+.card p{
+    color:#9fb0c2;
+    line-height:1.6;
+}
+
+.title{
+    margin-bottom:22px;
+}
+
+.title h2{
+    font-size:30px;
+}
+
+.title p{
+    margin-top:6px;
+    color:#91a4b8;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:#0d1d2e;
+    border:1px solid #213950;
+    padding:20px;
+    border-radius:14px;
+}
+
+.stat-number{
+    font-size:32px;
+    font-weight:800;
+    color:#2994ff;
+}
+
+.stat small{
+    color:#9db0c2;
+}
+
+.form{
+    max-width:850px;
+    margin:auto;
+    background:#0d1d2e;
+    border:1px solid #213950;
+    border-radius:15px;
+    padding:24px;
+}
+
+.form-group{
+    margin-bottom:17px;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+    color:#d3dde8;
+}
+
+input,textarea{
+    width:100%;
+    background:#07111f;
+    color:white;
+    border:1px solid #29445f;
+    padding:12px;
+    border-radius:8px;
+    outline:none;
+}
+
+input:focus,textarea:focus{
+    border-color:#2994ff;
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.item{
+    display:grid;
+    grid-template-columns:1fr 90px 140px 42px;
+    gap:7px;
+    margin-bottom:8px;
+}
+
+.remove{
+    background:#762a35;
+    color:white;
+    border:none;
+    border-radius:8px;
+}
+
+.link-box{
+    background:#07111f;
+    border:1px solid #29445f;
+    padding:14px;
+    border-radius:9px;
+    margin-top:15px;
+    word-break:break-all;
+}
+
+.link-box code{
+    color:#68b2ff;
+}
+
+.receipt{
+    max-width:650px;
+    margin:auto;
+    background:white;
+    color:#111;
+    padding:30px;
+    border-radius:5px;
+}
+
+.receipt-head{
+    text-align:center;
+    padding-bottom:15px;
+    border-bottom:1px dashed #888;
+}
+
+.receipt-head h2{
+    margin-bottom:5px;
+}
+
+.info{
+    line-height:1.8;
+    margin:18px 0;
+}
+
+.receipt-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.receipt-table th,
+.receipt-table td{
+    padding:9px 4px;
+    border-bottom:1px solid #ddd;
+}
+
+.receipt-table th:last-child,
+.receipt-table td:last-child{
+    text-align:right;
+}
+
+.total{
+    display:flex;
+    justify-content:space-between;
+    margin-top:18px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.note{
+    margin-top:20px;
+    color:#555;
+    font-size:13px;
+}
+
+.location-box{
+    max-width:650px;
+    margin:20px auto;
+    background:#0d1d2e;
+    border:1px solid #213950;
+    border-radius:15px;
+    padding:22px;
+}
+
+.location-box p{
+    color:#aebdcb;
+    line-height:1.6;
+    margin:10px 0;
+}
+
+.status{
+    background:#07111f;
+    padding:13px;
+    border-radius:8px;
+    margin-top:15px;
+    color:#bdd0e3;
+    line-height:1.6;
+}
+
+.visit{
+    background:#0d1d2e;
+    border:1px solid #213950;
+    border-radius:13px;
+    padding:18px;
+    margin-bottom:12px;
+}
+
+.visit p{
+    margin:6px 0;
+    color:#b6c5d3;
+}
+
+.badge{
+    display:inline-block;
+    margin-top:7px;
+    padding:5px 9px;
+    border-radius:20px;
+    background:#173c5c;
+    font-size:12px;
+}
+
+.empty{
+    text-align:center;
+    padding:30px;
+    color:#75899e;
+}
+
+footer{
+    border-top:1px solid #20364e;
+    padding:25px 0;
+    text-align:center;
+    color:#718499;
+    font-size:13px;
+}
+
+@media(max-width:800px){
+    .card-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .item{
+        grid-template-columns:1fr 80px;
+    }
+}
+
+@media(max-width:550px){
+    .nav{
+        align-items:flex-start;
+        flex-direction:column;
+        padding:10px 0;
+    }
+
+    .card-grid,
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding-top:35px;
+    }
+
+    .receipt{
+        padding:20px 14px;
+    }
+}
+
+@media print{
+    header,
+    footer,
+    .no-print{
+        display:none!important;
+    }
+
+    body{
+        background:white;
+    }
+
+    #receiptSection{
+        display:block!important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="container nav">
+
+<div class="logo">
+Helix<span>.geolocation</span>
+</div>
+
+<div class="nav-buttons">
+<button onclick="showSection('home')">Beranda</button>
+<button onclick="showSection('dashboard')">Dashboard</button>
+<button onclick="showSection('create')">Buat Resi</button>
+<button onclick="showSection('visits')">Aktivitas</button>
+</div>
+
+</div>
+</header>
+
+
+<main>
+
+<!-- BERANDA -->
+
+<section id="home" class="active">
+
+<div class="container">
+
+<div class="hero">
+
+<h1>
+Helix<span>.geolocation</span>
+</h1>
+
+<p>
+Platform resi digital dengan sistem berbagi lokasi
+berdasarkan persetujuan pengguna. Buat resi, bagikan
+link, dan catat aktivitas pengunjung yang memilih
+untuk membagikan lokasinya.
+</p>
+
+<div class="actions">
+
+<button
+class="primary"
+onclick="showSection('create')">
++ Buat Resi
+</button>
+
+<button
+class="secondary"
+onclick="showSection('dashboard')">
+Dashboard Admin
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card-grid">
+
+<div class="card">
+<h3>🧾 Resi Digital</h3>
+<p>
+Buat nota pembayaran lengkap dengan barang,
+jumlah, harga, pelanggan dan total transaksi.
+</p>
+</div>
+
+<div class="card">
+<h3>🔗 Link Resi</h3>
+<p>
+Setiap resi memiliki link unik yang dapat
+dibagikan kepada pengunjung.
+</p>
+</div>
+
+<div class="card">
+<h3>📍 Geolocation</h3>
+<p>
+Pengunjung dapat membagikan lokasi setelah
+memberikan izin kepada browser.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+<div class="container">
+
+<div class="title">
+
+<h2>Dashboard Admin</h2>
+
+<p>
+Kelola resi dan lihat aktivitas pengunjung.
+</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<div class="stat-number" id="totalReceipts">0</div>
+<small>Total Resi</small>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="totalVisits">0</div>
+<small>Total Aktivitas</small>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="totalGranted">0</div>
+<small>Lokasi Dibagikan</small>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="totalDenied">0</div>
+<small>Lokasi Ditolak</small>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>Daftar Resi</h3>
+
+<div id="receiptList"></div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CREATE -->
+
+<section id="create">
+
+<div class="container">
+
+<div class="title">
+
+<h2>Buat Resi Baru</h2>
+
+<p>
+Masukkan informasi transaksi.
+</p>
+
+</div>
+
+
+<div class="form">
+
+<div class="form-group">
+
+<label>Nama Tempat / Toko</label>
+
+<input
+id="store"
+placeholder="Contoh: Wanz Store">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Lokasi Pembayaran</label>
+
+<input
+id="place"
+placeholder="Contoh: Pangkalpinang">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Nama Pelanggan</label>
+
+<input
+id="customer"
+placeholder="Contoh: Budi">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Barang / Jasa</label>
+
+<div id="items"></div>
+
+<button
+class="secondary"
+onclick="addItem()">
+
++ Tambah Barang
+
+</button>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Catatan</label>
+
+<textarea
+id="notes"
+placeholder="Catatan tambahan..."></textarea>
+
+</div>
+
+
+<button
+class="primary"
+onclick="createReceipt()">
+
+Buat Resi Sekarang
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- RECEIPT -->
+
+<section id="receiptSection">
+
+<div class="container">
+
+<div
+class="no-print"
+style="text-align:center;margin-bottom:20px">
+
+<button
+class="secondary"
+onclick="showSection('home')">
+
+← Beranda
+
+</button>
+
+<button
+class="primary"
+onclick="window.print()">
+
+🖨 Cetak
+
+</button>
+
+</div>
+
+
+<div id="receiptContent"></div>
+
+
+<div
+class="location-box no-print"
+id="locationBox">
+
+<h3>📍 Bagikan Lokasi</h3>
+
+<p>
+Jika kamu ingin membagikan lokasi kepada sistem,
+tekan tombol di bawah.
+Browser kemudian akan meminta izin lokasi.
+</p>
+
+<p>
+Lokasi tidak akan diminta secara diam-diam.
+Jika kamu menolak, resi tetap dapat digunakan.
+</p>
+
+<button
+class="primary"
+onclick="shareLocation()">
+
+📍 Bagikan Lokasi Saya
+
+</button>
+
+<div
+class="status"
+id="locationStatus">
+
+Belum ada lokasi yang dibagikan.
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- VISITS -->
+
+<section id="visits">
+
+<div class="container">
+
+<div class="title">
+
+<h2>Aktivitas Pengunjung</h2>
+
+<p>
+Lokasi hanya ditampilkan apabila pengguna
+memberikan izin.
+</p>
+
+</div>
+
+<div class="card">
+
+<div id="visitList"></div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+Helix.geolocation © 2026
+
+<br>
+
+Berbagi lokasi berdasarkan persetujuan pengguna.
+
+</footer>
+
+
+<script>
+
+/* ==========================================
+   HELIX DATABASE DEMO
+   ========================================== */
+
+const RECEIPTS_KEY =
+"helix_receipts";
+
+const VISITS_KEY =
+"helix_visits";
+
+let currentReceipt = null;
+
+
+/* ==========================================
+   STORAGE
+   ========================================== */
+
+function getReceipts(){
+
+return JSON.parse(
+localStorage.getItem(RECEIPTS_KEY)
+|| "[]"
+);
+
+}
+
+function saveReceipts(data){
+
+localStorage.setItem(
+RECEIPTS_KEY,
+JSON.stringify(data)
+);
+
+}
+
+function getVisits(){
+
+return JSON.parse(
+localStorage.getItem(VISITS_KEY)
+|| "[]"
+);
+
+}
+
+function saveVisits(data){
+
+localStorage.setItem(
+VISITS_KEY,
+JSON.stringify(data)
+);
+
+}
+
+
+/* ==========================================
+   NAVIGATION
+   ========================================== */
+
+function showSection(id){
+
+document
+.querySelectorAll("section")
+.forEach(section=>{
+section.classList.remove("active");
+});
+
+document
+.getElementById(id)
+.classList.add("active");
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+if(id==="dashboard"){
+updateDashboard();
+}
+
+if(id==="visits"){
+updateVisits();
+}
+
+}
+
+
+/* ==========================================
+   ADD ITEM
+   ========================================== */
+
+function addItem(){
+
+const container =
+document.getElementById("items");
+
+const div =
+document.createElement("div");
+
+div.className="item";
+
+div.innerHTML=`
+
+<input
+class="itemName"
+placeholder="Nama barang">
+
+<input
+class="itemQty"
+type="number"
+min="1"
+value="1">
+
+<input
+class="itemPrice"
+type="number"
+min="0"
+placeholder="Harga">
+
+<button
+class="remove"
+onclick="this.parentElement.remove()">
+
+×
+</button>
+
+`;
+
+container.appendChild(div);
+
+}
+
+
+/* ==========================================
+   RUPIAH
+   ========================================== */
+
+function rupiah(number){
+
+return new Intl.NumberFormat(
+"id-ID",
+{
+style:"currency",
+currency:"IDR",
+maximumFractionDigits:0
+}
+).format(number);
+
+}
+
+
+/* ==========================================
+   ESCAPE
+   ========================================== */
+
+function safe(text){
+
+return String(text)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
+
+
+/* ==========================================
+   ID
+   ========================================== */
+
+function createID(){
+
+return "HX-"+
+Date.now()+
+"-"+
+Math.random()
+.toString(36)
+.substring(2,8);
+
+}
+
+
+/* ==========================================
+   CREATE RECEIPT
+   ========================================== */
+
+function createReceipt(){
+
+const store =
+document.getElementById("store")
+.value.trim();
+
+const place =
+document.getElementById("place")
+.value.trim();
+
+const customer =
+document.getElementById("customer")
+.value.trim();
+
+const notes =
+document.getElementById("notes")
+.value.trim();
+
+
+if(!store){
+
+alert("Nama tempat wajib diisi.");
+
+return;
+
+}
+
+
+const itemRows =
+document.querySelectorAll(".item");
+
+const items=[];
+
+
+itemRows.forEach(row=>{
+
+const name =
+row.querySelector(".itemName")
+.value.trim();
+
+const qty =
+Number(
+row.querySelector(".itemQty")
+.value
+);
+
+const price =
+Number(
+row.querySelector(".itemPrice")
+.value
+);
+
+
+if(name){
+
+items.push({
+name:name,
+qty:qty,
+price:price
+});
+
+}
+
+});
+
+
+if(items.length===0){
+
+alert("Tambahkan minimal satu barang.");
+
+return;
+
+}
+
+
+const total =
+items.reduce(
+(sum,item)=>
+sum+
+(item.qty*item.price),
+0
+);
+
+
+const receipt={
+
+id:createID(),
+
+number:
+"HX-"+
+new Date()
+.toISOString()
+.slice(0,10)
+.replaceAll("-","")+
+"-"+
+Math.floor(
+Math.random()*9000+1000
+),
+
+store:store,
+
+place:place,
+
+customer:customer,
+
+items:items,
+
+total:total,
+
+notes:notes,
+
+createdAt:
+new Date().toISOString()
+
+};
+
+
+const receipts =
+getReceipts();
+
+receipts.push(receipt);
+
+saveReceipts(receipts);
+
+
+alert(
+"Resi berhasil dibuat!\n\n"+
+receipt.number
+);
+
+
+openReceipt(receipt.id);
+
+}
+
+
+/* ==========================================
+   RECEIPT URL
+   ========================================== */
+
+function receiptURL(id){
+
+return location.origin+
+location.pathname+
+"?receipt="+
+encodeURIComponent(id);
+
+}
+
+
+/* ==========================================
+   OPEN RECEIPT
+   ========================================== */
+
+function openReceipt(id){
+
+const receipts =
+getReceipts();
+
+const receipt =
+receipts.find(
+r=>r.id===id
+);
+
+
+if(!receipt){
+
+alert("Resi tidak ditemukan.");
+
+return;
+
+}
+
+
+currentReceipt=id;
+
+
+const rows =
+receipt.items.map(item=>`
+
+<tr>
+
+<td>
+${safe(item.name)}
+</td>
+
+<td>
+${item.qty}
+</td>
+
+<td>
+${rupiah(item.price)}
+</td>
+
+<td>
+${rupiah(item.qty*item.price)}
+</td>
+
+</tr>
+
+`).join("");
+
+
+document.getElementById(
+"receiptContent"
+).innerHTML=`
+
+<div class="receipt">
+
+<div class="receipt-head">
+
+<h2>
+${safe(receipt.store)}
+</h2>
+
+<div>
+RESI PEMBAYARAN
+</div>
+
+<small>
+${safe(receipt.number)}
+</small>
+
+</div>
+
+
+<div class="info">
+
+<div>
+<strong>Lokasi:</strong>
+${safe(receipt.place||"-")}
+</div>
+
+<div>
+<strong>Pelanggan:</strong>
+${safe(receipt.customer||"-")}
+</div>
+
+<div>
+<strong>Tanggal:</strong>
+${new Date(
+receipt.createdAt
+).toLocaleString("id-ID")}
+</div>
+
+</div>
+
+
+<table class="receipt-table">
+
+<thead>
+
+<tr>
+
+<th>Barang</th>
+<th>Qty</th>
+<th>Harga</th>
+<th>Total</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${rows}
+
+</tbody>
+
+</table>
+
+
+<div class="total">
+
+<span>TOTAL</span>
+
+<span>
+${rupiah(receipt.total)}
+</span>
+
+</div>
+
+
+${
+receipt.notes
+?
+`
+<div class="note">
+<strong>Catatan:</strong>
+${safe(receipt.notes)}
+</div>
+`
+:
+""
+}
+
+
+<div class="note">
+Terima kasih telah melakukan transaksi.
+</div>
+
+</div>
+
+`;
+
+
+showSection("receiptSection");
+
+updateLocationStatus();
+
+}
+
+
+/* ==========================================
+   SHARE LOCATION
+   ========================================== */
+
+function shareLocation(){
+
+if(!currentReceipt){
+
+alert("Resi tidak ditemukan.");
+
+return;
+
+}
+
+
+const status =
+document.getElementById(
+"locationStatus"
+);
+
+
+if(!navigator.geolocation){
+
+status.innerHTML=
+"Browser tidak mendukung geolocation.";
+
+return;
+
+}
+
+
+status.innerHTML=
+"Meminta izin lokasi dari browser...";
+
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+const visit={
+
+id:createID(),
+
+receiptId:
+currentReceipt,
+
+time:
+new Date().toISOString(),
+
+permission:"granted",
+
+latitude:
+position.coords.latitude,
+
+longitude:
+position.coords.longitude
+
+};
+
+
+const visits =
+getVisits();
+
+visits.push(visit);
+
+saveVisits(visits);
+
+
+status.innerHTML=`
+
+<strong>
+✓ Lokasi berhasil dibagikan.
+</strong>
+
+<br><br>
+
+Latitude:
+${position.coords.latitude.toFixed(6)}
+
+<br>
+
+Longitude:
+${position.coords.longitude.toFixed(6)}
+
+`;
+
+},
+
+function(error){
+
+let message=
+"Lokasi tidak berhasil dibagikan.";
+
+
+if(
+error.code===
+error.PERMISSION_DENIED
+){
+
+message=
+"Pengguna menolak izin lokasi. Resi tetap dapat digunakan.";
+
+}
+
+
+if(
+error.code===
+error.POSITION_UNAVAILABLE
+){
+
+message=
+"Lokasi perangkat tidak tersedia.";
+
+}
+
+
+if(
+error.code===
+error.TIMEOUT
+){
+
+message=
+"Permintaan lokasi mengalami timeout.";
+
+}
+
+
+const visit={
+
+id:createID(),
+
+receiptId:
+currentReceipt,
+
+time:
+new Date().toISOString(),
+
+permission:"denied",
+
+latitude:null,
+
+longitude:null
+
+};
+
+
+const visits =
+getVisits();
+
+visits.push(visit);
+
+saveVisits(visits);
+
+
+status.innerHTML=
+message;
+
+}
+
+);
+
+}
+
+
+/* ==========================================
+   LOCATION STATUS
+   ========================================== */
+
+function updateLocationStatus(){
+
+const visits =
+getVisits();
+
+const last =
+visits
+.filter(
+v=>v.receiptId===currentReceipt
+)
+.slice(-1)[0];
+
+
+const status =
+document.getElementById(
+"locationStatus"
+);
+
+
+if(!last){
+
+status.innerHTML=
+"Belum ada lokasi yang dibagikan.";
+
+return;
+
+}
+
+
+if(
+last.permission===
+"denied"
+){
+
+status.innerHTML=
+"Pengunjung terakhir tidak membagikan lokasi.";
+
+return;
+
+}
+
+
+status.innerHTML=`
+
+Lokasi telah dibagikan.
+
+<br>
+
+Latitude:
+${last.latitude}
+
+<br>
+
+Longitude:
+${last.longitude}
+
+`;
+
+}
+
+
+/* ==========================================
+   DASHBOARD
+   ========================================== */
+
+function updateDashboard(){
+
+const receipts =
+getReceipts();
+
+const visits =
+getVisits();
+
+
+document.getElementById(
+"totalReceipts"
+).textContent=
+receipts.length;
+
+
+document.getElementById(
+"totalVisits"
+).textContent=
+visits.length;
+
+
+document.getElementById(
+"totalGranted"
+).textContent=
+visits.filter(
+v=>v.permission==="granted"
+).length;
+
+
+document.getElementById(
+"totalDenied"
+).textContent=
+visits.filter(
+v=>v.permission==="denied"
+).length;
+
+
+const list =
+document.getElementById(
+"receiptList"
+);
+
+
+if(receipts.length===0){
+
+list.innerHTML=
+`
+<div class="empty">
+Belum ada resi.
+</div>
+`;
+
+return;
+
+}
+
+
+list.innerHTML =
+receipts
+.slice()
+.reverse()
+.map(receipt=>{
+
+const url =
+receiptURL(receipt.id);
+
+
+return`
+
+<div
+style="
+padding:18px 0;
+border-bottom:1px solid #203950;
+">
+
+<strong>
+${safe(receipt.store)}
+</strong>
+
+<p
+style="
+color:#9fb0c2;
+margin-top:6px;
+">
+
+${safe(receipt.number)}
+
+·
+
+${rupiah(receipt.total)}
+
+</p>
+
+
+<div class="link-box">
+
+<code>
+${safe(url)}
+</code>
+
+</div>
+
+
+<div
+style="
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-top:10px;
+">
+
+<button
+class="primary"
+onclick="copyLink('${url}')">
+
+Salin Link
+
+</button>
+
+
+<button
+class="secondary"
+onclick="openReceipt('${receipt.id}')">
+
+Buka Resi
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+})
+.join("");
+
+}
+
+
+/* ==========================================
+   VISITS
+   ========================================== */
+
+function updateVisits(){
+
+const visits =
+getVisits();
+
+const receipts =
+getReceipts();
+
+const list =
+document.getElementById(
+"visitList"
+);
+
+
+if(visits.length===0){
+
+list.innerHTML=
+`
+<div class="empty">
+Belum ada aktivitas pengunjung.
+</div>
+`;
+
+return;
+
+}
+
+
+list.innerHTML =
+visits
+.slice()
+.reverse()
+.map(visit=>{
+
+const receipt =
+receipts.find(
+r=>r.id===visit.receiptId
+);
+
+
+const receiptNumber =
+receipt
+?receipt.number
+:"Tidak diketahui";
+
+
+if(
+visit.permission
